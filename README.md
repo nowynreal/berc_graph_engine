@@ -1,46 +1,89 @@
 # Excel Chart Generator
 
-A professional desktop GUI application for creating highly customizable charts from Excel data files. Built with PySide6 (Qt) and matplotlib, this tool provides researchers and analysts with a powerful, user-friendly interface for data visualization.
+A professional desktop GUI application for creating highly customizable charts from Excel data files. Built with PySide6 (Qt) and matplotlib, this tool provides researchers and analysts with a powerful, user-friendly interface for publication-ready data visualization.
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Version](https://img.shields.io/badge/version-2.0.0-blue)
 ![Python](https://img.shields.io/badge/python-3.8+-green)
 ![License](https://img.shields.io/badge/license-MIT-orange)
 
 ## 🎯 Features
 
-### Data Loading
+### Data Loading & Management
 - **Excel File Support**: Load `.xlsx`, `.xls`, and `.xlsm` files
-- **Sheet Selection**: Choose from multiple worksheets
-- **Column Preview**: View data before plotting
-- **Flexible Selection**: Pick X-axis and multiple Y-axis columns
-- **Dual Y-Axis**: Support for secondary Y-axis with independent scaling
+- **Sheet Selection**: Choose from multiple worksheets with live data preview
+- **Smart Column Mapping**: Intuitive table-based column selection with Y1/Y2 assignment
+- **Auto-Label Detection**: Automatically suggests axis labels from column names
+- **Dual Y-Axis**: Support for secondary Y-axis with independent scaling and auto-enable
+- **Column Preview**: View data before plotting with sortable tables
 
-### Chart Customization
+### Advanced Chart Customization
 
-#### Style Controls
-- **6 Preset Themes**: Light, Dark, Scientific, Vibrant, Pastel, Monochrome
-- **Custom Colors**: Individual color pickers for background, grid, and each data series
-- **Line Styles**: Solid, dashed, dotted, dash-dot
-- **Line Width**: Adjustable from 0.5 to 10.0 pixels
-- **Markers**: Circle, square, triangle, diamond, plus, cross, or none
-- **Fonts**: Multiple font families and adjustable sizes
-- **Grid Control**: Toggle grid visibility with custom colors
+#### Professional Themes (22+ Presets)
+- **Light & Dark**: Classic white background and modern dark mode
+- **Scientific**: Professional palette for academic publications
+- **Vibrant & Pastel**: Bold or soft colors for diverse needs
+- **Monochrome**: Grayscale for print compatibility
+- **MTSU Branded**: Blue, Bold, and Publication themes
+- **BERC Professional**: Report, Dark, Nashville, Modern, Corporate themes
+- **Premium Modern**: Carbon Modern, Nordic Calm, Sandstone Editorial, Indigo Print, Aurora Tech, Evergreen Atlas
+- **Accessible**: Colorblind-safe palette (Okabe-Ito) for universal accessibility
+- **Automatic Theme Adaptation**: Text, axis, and grid colors adapt to background for perfect contrast
 
-#### Axis Configuration
-- **Axis Labels**: Custom labels for X, Y1, and Y2 axes
-- **Value Ranges**: Set minimum and maximum values (or auto-scale)
-- **Tick Rotation**: Rotate tick labels from -90° to +90°
-- **Figure Size**: Adjustable width (4-20 inches) and height (3-15 inches)
+#### Style Controls (Tabbed Interface)
+- **General Tab**:
+  - Theme presets with full typography control
+  - Background and grid color customization
+  - Font family selection (20+ fonts including Calibri, Garamond, Georgia, Roboto, Segoe UI)
+  - Font size control for body and title text
+  - Grid visibility toggle
+- **Special Scenarios**:
+  - COVID-19 period highlighting (2020-2021)
+  - Great Recession (2008-2009)
+  - Housing Crisis (2007-2012)
+  - Interest Rate Hikes (2022-2023)
+  - Custom period overlays with transparency and labels
+- **Legend Tab**:
+  - Position control (best, upper/lower right/left, center)
+  - Multi-column layout (1-4 columns)
+  - Custom legend title
+  - Frame transparency control
+  - Spacing adjustments (label spacing, handle length, text padding)
+- **Lines Tab**:
+  - Individual line customization per data series
+  - Color pickers for each line
+  - Line styles: Solid, dashed, dotted, dash-dot
+  - Line width: Adjustable from 0.5 to 10.0 pixels
+  - Markers: Circle, square, triangle, diamond, plus, cross, or none
+  - Y2 axis assignment per line
+  - **Smoothing**: Moving average with configurable window (1-25 points)
+  - **Premium Rendering**: Round line caps/joins and antialiasing for professional appearance
 
-#### Legend
-- **Toggle Visibility**: Show or hide legend
-- **Position Control**: Best, upper/lower right/left, center
-- **Multi-column Support**: Organize legend entries
+#### Axis Configuration (Tabbed Interface)
+- **Titles Tab**:
+  - Main chart title with alignment (left/center/right) and vertical offset
+  - Optional subtitle with 5 alignment modes:
+    - Chart-based: Left/Center/Right (relative to chart area)
+    - Figure-based: Left/Right (relative to canvas edges)
+  - Subtitle positioned relative to title (negative offset = below)
+  - Bold toggle and size control for both titles
+- **X-Axis, Y1-Axis, Y2-Axis Tabs**:
+  - Custom axis labels with bold option
+  - Min/Max value ranges (auto-scale or manual)
+  - Tick rotation (-90° to +90°)
+  - Tick step control for custom intervals
+  - Categorical mode (preserve all labels)
+  - Grouped categorical (e.g., "2006 q1" → show only "2006")
+  - Hide labels option (keep grid/ticks, suppress labels)
+  - Scale selection (Linear or Log)
+  - Value format: Auto, Decimal, Scientific, Percent, Integer
+- **Figure Tab**:
+  - Width: 4-20 inches
+  - Height: 3-15 inches
 
-### Live Preview
-- **Real-time Updates**: See changes instantly as you adjust settings
-- **Debounced Rendering**: Smooth performance during rapid changes
+### Live Preview & Performance
+- **Real-time Updates**: See changes instantly with 300ms debounce
 - **Embedded Preview**: No need to export to see results
+- **Smart Rendering**: Efficient chart updates during configuration
 
 ### Export Options
 - **PNG Export**: High-quality raster images with adjustable DPI (72-600)
@@ -51,6 +94,7 @@ A professional desktop GUI application for creating highly customizable charts f
 - **SVG Export**: Scalable vector graphics for publications
 - **PDF Export**: Professional documents ready for printing
 - **File Browser**: Easy output location selection
+- **Tight Layout**: Automatic bbox optimization
 
 ## 📋 Requirements
 
@@ -111,39 +155,46 @@ python main.py
 4. Choose the sheet from the dropdown
 5. Preview your data in the table
 
-#### 2. Select Columns
-1. Choose your **X-Axis column** from the dropdown
-2. Select one or more **Y-Axis columns** from the list (Ctrl+Click for multiple)
-3. Data will automatically be validated
+#### 2. Map Columns
+1. Use the **Column Mapping** table to assign roles:
+   - Click **X** radio button for your X-axis column
+   - Click **Y-1** checkboxes for primary Y-axis columns
+   - Click **Y-2** checkboxes for secondary Y-axis columns
+2. Selected columns appear in the **Current Selection** summary
+3. Y2 axis is automatically enabled when Y-2 columns are selected
+4. Axis labels are auto-suggested from column names
 
 #### 3. Customize Style
 1. Click the **"Style"** tab
-2. Choose a preset theme or customize:
-   - Background and grid colors
-   - Font family and sizes
-   - Individual line colors, styles, widths, and markers
-   - Enable/disable grid and legend
-3. Mark lines for secondary Y-axis with the **Y2** checkbox
+2. **General Tab**:
+   - Choose a preset theme (22+ options including colorblind-safe)
+   - Select special scenario highlighting (COVID-19, Recessions, etc.)
+   - Adjust background, grid, and font settings
+3. **Legend Tab**:
+   - Configure position, columns, title, and spacing
+4. **Lines Tab**:
+   - Customize each line's color, style, width, and markers
+   - Apply smoothing (moving average with 1-25 point window)
+   - Assign lines to Y2 axis individually
 
 #### 4. Configure Axes
 1. Click the **"Axes"** tab
-2. Set chart title
-3. Configure X, Y1, and optionally Y2 axes:
-   - Custom labels
-   - Min/Max values (leave blank for auto)
-   - Tick rotation
-4. Adjust figure dimensions
+2. **Titles Tab**:
+   - Set main title with alignment and offset
+   - Add optional subtitle with chart/figure-based alignment
+3. **X-Axis, Y1-Axis, Y2-Axis Tabs**:
+   - Labels are auto-filled from mapping (editable)
+   - Set min/max ranges or leave auto
+   - Adjust tick rotation, step, and format
+   - Enable categorical or grouped modes
+4. **Figure Tab**:
+   - Set canvas dimensions (width/height in inches)
 
-#### 5. Preview
-- Chart updates automatically in the preview panel
-- All changes reflect immediately
-
-#### 6. Export
-1. Click the **"Export"** tab
-2. Choose output format (PNG, SVG, or PDF)
-3. Set DPI for PNG (if applicable)
-4. Click **"Browse..."** to select save location
-5. Click **"Export Chart"**
+#### 5. Preview & Export
+- Chart updates live in the preview panel
+- Click **"Export"** tab when ready
+- Choose format (PNG/SVG/PDF) and quality
+- Click **"Export Chart"**
 
 ## 📁 Project Structure
 
@@ -199,12 +250,38 @@ Output (Preview/Export)
 
 ## 🎨 Available Themes
 
+### Standard Themes
 - **Light**: Classic white background with standard colors
-- **Dark**: Dark background for reduced eye strain
-- **Scientific**: Professional color scheme for academic publications
-- **Vibrant**: Bold, eye-catching colors for presentations
+- **Dark**: Dark background for reduced eye strain with bright, visible colors
+- **Scientific**: Professional serif fonts and academic color palette
+- **Vibrant**: Bold, eye-catching Material Design colors
 - **Pastel**: Soft, muted colors for gentle visualizations
 - **Monochrome**: Grayscale palette for print compatibility
+- **Publication**: Black/red/blue academic palette with serif fonts
+
+### MTSU Branded Themes
+- **MTSU Blue**: Official MTSU dark blue, bright blue, and orange
+- **MTSU Bold**: High-contrast red/blue for presentations
+- **MTSU Publication**: Academic publication style with Times New Roman
+
+### BERC Professional Themes
+- **BERC Professional**: Navy-to-teal gradient palette
+- **BERC Report**: Red/blue report style with Arial
+- **BERC Dark**: Dark mode with vibrant accent colors
+- **BERC Nashville**: High-contrast presentation theme
+- **BERC Modern**: Dodger blue/tomato modern palette
+- **BERC Corporate**: Times New Roman with Excel-inspired colors
+
+### Premium Design Themes
+- **Carbon Modern**: Dark technology theme (Segoe UI, indigo/aqua/amber)
+- **Nordic Calm**: Scandinavian-inspired calm palette (Calibri, blue/teal/sage)
+- **Sandstone Editorial**: Warm editorial design (Georgia, burnt umber/slate)
+- **Indigo Print**: Publication-quality indigo theme (Garamond, royal blue/salmon)
+- **Aurora Tech**: Neon cyberpunk aesthetics (Roboto, cyan/purple/mint)
+- **Evergreen Atlas**: Natural earth tones (Palatino, evergreen/gold/steel)
+
+### Accessibility
+- **Accessible (Colorblind Safe)**: Okabe-Ito palette designed for protanopia, deuteranopia, and tritanopia color vision deficiencies. Ensures charts are readable for all users.
 
 ## 💡 Tips and Best Practices
 
@@ -218,20 +295,37 @@ Output (Preview/Export)
 2. **Column Selection**: 
    - Use numeric columns for Y-axis
    - X-axis can be text or numeric
+   - Use Column Mapping table for precise control
 
 3. **Secondary Y-Axis**:
    - Use when Y values have very different scales
-   - Label clearly to avoid confusion
+   - Automatically enabled when Y-2 columns are mapped
+   - Labels auto-suggested from column names
 
-4. **Export Quality**:
+4. **Themes & Accessibility**:
+   - Dark themes automatically adjust text/axis colors for visibility
+   - Use "Accessible (Colorblind Safe)" for universal readability
+   - Test theme contrast before exporting
+
+5. **Smoothing**:
+   - Apply moving average (1-25 window) for noisy data
+   - Larger windows = smoother lines but less detail
+   - Preview changes before exporting
+
+6. **Period Highlights**:
+   - Use Special Scenarios for common economic/pandemic periods
+   - Highlights align to year-based x-axis data
+   - Combine with themes for professional context
+
+7. **Export Quality**:
    - Use 300 DPI for printed materials
    - Use SVG or PDF for publications requiring vector graphics
    - Use 72 DPI for web/screen display
 
-5. **Color Selection**:
-   - Ensure sufficient contrast for readability
-   - Consider colorblind-friendly palettes
-   - Test prints in grayscale if needed
+8. **Title & Subtitle**:
+   - Subtitle offset is relative to title (negative = below)
+   - Use chart-based alignment for consistent positioning
+   - Use figure-based for edge-aligned annotations
 
 ## 🔧 Troubleshooting
 
@@ -303,10 +397,12 @@ This project is licensed under the MIT License. See LICENSE file for details.
 ## 👥 Credits
 
 **Developed by**: BERC (Business and Economic Research Center)  
-**Version**: 1.0.0  
+**Version**: 2.0.0  
+**Release Date**: December 2025  
 **Python**: 3.8+  
 **Framework**: PySide6 (Qt for Python)  
-**Visualization**: matplotlib
+**Visualization**: matplotlib  
+**Accessibility**: Okabe-Ito colorblind-safe palette
 
 ## 🤝 Support
 
@@ -317,14 +413,42 @@ For issues, questions, or suggestions:
 
 ## 🔄 Version History
 
-### Version 1.0.0 (Current)
-- Initial release
+### Version 2.0.0 (Current - December 2025)
+**Major UI/UX Overhaul & Professional Design Features**
+
+#### Interface Improvements
+- **Tabbed Panels**: Organized Style (General/Legend/Lines) and Axes (Titles/X/Y1/Y2/Figure) into tabs
+- **Column Mapping Table**: Intuitive radio/checkbox table for X/Y1/Y2 assignment
+- **Auto-Label & Enable**: Y2 axis labels auto-suggested and enabled from column mapping
+- **Smart Filtering**: Column mapping table with role filter
+
+#### Advanced Styling
+- **16 New Themes**: MTSU branded, BERC professional, premium modern designs
+- **Colorblind Safe**: Accessible theme using Okabe-Ito palette
+- **Theme Intelligence**: Automatic text/axis color adaptation to background
+- **Font Expansion**: 20+ font families with fallback handling
+- **Premium Rendering**: Round line caps/joins, antialiasing for smooth appearance
+
+#### Chart Features
+- **Line Smoothing**: Moving average with configurable 1-25 point window
+- **Period Highlights**: Special scenario presets (COVID-19, recessions) with year-based alignment
+- **Subtitle System**: 5 alignment modes (chart/figure-based) with relative positioning
+- **Categorical Axes**: Grouped labels (e.g., quarterly → yearly), hide labels option
+- **Enhanced Legend**: Multi-column, title, spacing, transparency controls
+
+#### Technical Enhancements
+- **Font Fallback**: Automatic fallback for missing fonts (Roboto → Segoe UI/Arial/Calibri)
+- **Dark Theme Support**: Full x-axis tick label color synchronization
+- **Y2 Auto-Enable**: Secondary axis automatically enabled when Y2 columns mapped
+- **Config Extensibility**: Text color, smoothing, period highlights in ChartConfig
+
+### Version 1.0.0 (Initial Release)
 - Full Excel file support
 - Six preset themes
 - PNG, SVG, PDF export
 - Dual Y-axis support
 - Live preview
-- Comprehensive customization options
+- Basic customization options
 
 ---
 
