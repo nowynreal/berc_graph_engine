@@ -18,24 +18,38 @@ A professional desktop GUI application for creating highly customizable charts f
 
 ### Advanced Chart Customization
 
-#### Professional Themes (22+ Presets)
-- **Light & Dark**: Classic white background and modern dark mode
-- **Scientific**: Professional palette for academic publications
-- **Vibrant & Pastel**: Bold or soft colors for diverse needs
-- **Monochrome**: Grayscale for print compatibility
-- **MTSU Branded**: Blue, Bold, and Publication themes
-- **BERC Professional**: Report, Dark, Nashville, Modern, Corporate themes
-- **Premium Modern**: Carbon Modern, Nordic Calm, Sandstone Editorial, Indigo Print, Aurora Tech, Evergreen Atlas
-- **Accessible**: Colorblind-safe palette (Okabe-Ito) for universal accessibility
-- **Automatic Theme Adaptation**: Text, axis, and grid colors adapt to background for perfect contrast
+#### Professional Style Profiles (Unified System - 10 Presets)
+Comprehensive style profiles that combine colors, typography, grid settings, and layout in one click:
+
+- **IMF Official**: International Monetary Fund publication style
+- **World Bank Report**: World Bank official reports and publications
+- **Professional Clean**: Classic business presentation with horizontal gridlines
+- **Analytical Grid**: Value-reading focused with vertical gridlines
+- **Academic Journal**: Serif fonts for academic publications
+- **Presentation**: Bold, modern style for slide presentations
+- **Minimal Grid**: Lightweight design with subtle gridlines
+- **Full Grid**: Comprehensive reference grids on both axes
+- **No Grid**: Clean, distraction-free style
+- **Dark Mode**: Modern dark theme for reduced eye strain
+
+Each style includes:
+✓ Optimized color palette (10 colors per profile)
+✓ Grid type and styling (X-only, Y-only, both, or none)
+✓ Typography (font family, size, title weight)
+✓ Legend positioning and transparency
+✓ Professional axis and text colors
 
 #### Style Controls (Tabbed Interface)
 - **General Tab**:
-  - Theme presets with full typography control
-  - Background and grid color customization
-  - Font family selection (20+ fonts including Calibri, Garamond, Georgia, Roboto, Segoe UI)
-  - Font size control for body and title text
-  - Grid visibility toggle
+  - **Professional Style Selector**: 10 unified style profiles (IMF, World Bank, Academic, Presentation, etc.)
+  - **Colors**: Fine-tune background and grid colors
+  - **Typography**: Font family selection (20+ fonts), sizes for text and titles
+  - **Grid Control**: Choose grid configuration:
+    - X Axis Only (horizontal lines) - publication style
+    - Y Axis Only (vertical lines) - analytical reading
+    - Both Axes - comprehensive reference
+    - No Grid - clean appearance
+  - **Real-time Customization**: Override any style setting
 - **Special Scenarios**:
   - COVID-19 period highlighting (2020-2021)
   - Great Recession (2008-2009)

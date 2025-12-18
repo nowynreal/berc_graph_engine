@@ -25,6 +25,7 @@ class AxisConfig:
     color: str = "#000000"
     label_fontweight: str = 'normal'   # 'normal' or 'bold'
     grid: bool = True
+    grid_type: str = 'y_only'  # 'both', 'x_only', 'y_only', 'none' - applies to primary grid axis
     grid_color: str = "#CCCCCC"
     grid_alpha: float = 0.5
     grid_style: str = '--'
@@ -165,6 +166,7 @@ class ChartConfig:
                 'color': self.x_axis.color,
                 'label_fontweight': self.x_axis.label_fontweight,
                 'grid': self.x_axis.grid,
+                'grid_type': self.x_axis.grid_type,
                 'grid_color': self.x_axis.grid_color,
                 'grid_alpha': self.x_axis.grid_alpha,
                 'grid_style': self.x_axis.grid_style,
@@ -183,6 +185,7 @@ class ChartConfig:
                 'color': self.y_axis.color,
                 'label_fontweight': self.y_axis.label_fontweight,
                 'grid': self.y_axis.grid,
+                'grid_type': self.y_axis.grid_type,
                 'grid_color': self.y_axis.grid_color,
                 'grid_alpha': self.y_axis.grid_alpha,
                 'grid_style': self.y_axis.grid_style,
@@ -201,6 +204,7 @@ class ChartConfig:
                 'color': self.y2_axis.color,
                 'label_fontweight': self.y2_axis.label_fontweight,
                 'grid': self.y2_axis.grid,
+                'grid_type': self.y2_axis.grid_type,
                 'grid_color': self.y2_axis.grid_color,
                 'grid_alpha': self.y2_axis.grid_alpha,
                 'grid_style': self.y2_axis.grid_style,

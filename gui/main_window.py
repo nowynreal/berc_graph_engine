@@ -177,10 +177,18 @@ class MainWindow(QMainWindow):
             y2_columns: List of secondary Y columns
         """
         # Update line styles in style panel
-        from assets.themes import get_theme
-        theme = get_theme(self.style_panel.theme_combo.currentText())
+        from assets.comprehensive_styles import get_style
+        try:
+            style = get_style(self.style_panel.style_combo.currentText())
+            line_colors = style['line_colors']
+        except:
+            # Fallback to default colors
+            line_colors = [
+                '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
+                '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'
+            ]
         combined_columns = (y1_columns or []) + (y2_columns or [])
-        self.style_panel.update_line_styles(combined_columns, theme['line_colors'], y2_columns)
+        self.style_panel.update_line_styles(combined_columns, line_colors, y2_columns)
         
         # Set suggested axis labels
         self.axis_panel.set_x_label_suggestion(x_column)
@@ -239,9 +247,16 @@ class MainWindow(QMainWindow):
         style_config = self.style_panel.get_config()
         axis_config = self.axis_panel.get_config()
         
-        # Resolve current theme for axis/text colors
-        from assets.themes import get_theme
-        theme = get_theme(self.style_panel.theme_combo.currentText())
+        # Resolve current comprehensive style for all settings
+        from assets.comprehensive_styles import get_style
+        try:
+            style = get_style(self.style_panel.style_combo.currentText())
+            axis_color = style.get('axis_color', '#333333')
+            text_color = style.get('text_color', '#000000')
+        except:
+            # Fallback if style not found
+            axis_color = '#333333'
+            text_color = '#000000'
 
         # Create axis configurations
         x_axis = AxisConfig(
@@ -249,9 +264,10 @@ class MainWindow(QMainWindow):
             min_value=axis_config['x_axis']['min_value'],
             max_value=axis_config['x_axis']['max_value'],
             tick_rotation=axis_config['x_axis']['tick_rotation'],
-            color=theme.get('axis', '#000000'),
+            color=axis_color,
             label_fontweight=axis_config['x_axis'].get('label_fontweight', 'normal'),
             grid=style_config['show_grid'],
+            grid_type=style_config.get('grid_type', 'y_only'),
             grid_color=style_config['grid_color'],
             scale=axis_config['x_axis']['scale'],
             value_format=axis_config['x_axis']['value_format'],
@@ -266,9 +282,10 @@ class MainWindow(QMainWindow):
             min_value=axis_config['y_axis']['min_value'],
             max_value=axis_config['y_axis']['max_value'],
             tick_rotation=axis_config['y_axis']['tick_rotation'],
-            color=theme.get('axis', '#000000'),
+            color=axis_color,
             label_fontweight=axis_config['y_axis'].get('label_fontweight', 'normal'),
             grid=style_config['show_grid'],
+            grid_type=style_config.get('grid_type', 'y_only'),
             grid_color=style_config['grid_color'],
             scale=axis_config['y_axis']['scale'],
             value_format=axis_config['y_axis']['value_format'],
@@ -290,9 +307,10 @@ class MainWindow(QMainWindow):
                 min_value=y2_config.get('min_value'),
                 max_value=y2_config.get('max_value'),
                 tick_rotation=y2_config.get('tick_rotation', 0),
-                color=theme.get('axis', '#000000'),
+                color=axis_color,
                 label_fontweight=y2_config.get('label_fontweight', 'normal'),
                 grid=False,  # Don't show grid for secondary axis
+                grid_type=y2_config.get('grid_type', 'y_only'),
                 scale=y2_config.get('scale', 'linear'),
                 value_format=y2_config.get('value_format', 'auto'),
                 tick_step=y2_config.get('tick_step', 0),
@@ -367,7 +385,7 @@ class MainWindow(QMainWindow):
             background_color=style_config['background_color'],
             font_family=style_config['font_family'],
             font_size=style_config['font_size'],
-            text_color=theme.get('text', '#000000'),
+            text_color=text_color,
             legend=legend,
             figure_width=axis_config['figure_width'],
             figure_height=axis_config['figure_height'],

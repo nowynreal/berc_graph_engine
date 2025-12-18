@@ -47,6 +47,9 @@ class ChartEngine:
         # Store configuration
         self.config = config
         
+        # Close any existing figures to prevent memory leaks
+        plt.close('all')
+        
         # Create figure and primary axis
         self.figure = plt.figure(
             figsize=(config.figure_width, config.figure_height),
@@ -60,16 +63,49 @@ class ChartEngine:
         # Set font and text properties (with robust fallback)
         requested_family = config.font_family
         resolved_family = requested_family
+        font_available = False
+        
         try:
             fm.findfont(requested_family, fallback_to_default=False)
+            font_available = True
         except Exception:
-            for fb in ['Segoe UI', 'Arial', 'Calibri', 'DejaVu Sans', 'sans-serif']:
+            # Font not found, try fallbacks
+            fallback_fonts = ['Segoe UI', 'Arial', 'Calibri', 'DejaVu Sans', 'sans-serif']
+            for fb in fallback_fonts:
                 try:
                     fm.findfont(fb, fallback_to_default=False)
                     resolved_family = fb
                     break
                 except Exception:
                     continue
+            
+            # Show warning if requested font is not available
+            if not font_available and requested_family not in ['sans-serif', 'serif', 'monospace']:
+                import warnings
+                font_download_links = {
+                    'Arial': 'https://www.cufonfonts.com/font/arial',
+                    'Calibri': 'https://www.fontmirror.com/calibri',
+                    'Garamond': 'https://fonts.google.com/?query=garamond',
+                    'Georgia': 'https://www.cufonfonts.com/font/georgia',
+                    'Times New Roman': 'https://www.cufonfonts.com/font/times-new-roman',
+                    'Helvetica': 'https://www.cufonfonts.com/font/helvetica',
+                    'Palatino Linotype': 'https://www.cufonfonts.com/font/palatino-linotype',
+                    'Roboto': 'https://fonts.google.com/specimen/Roboto',
+                    'Open Sans': 'https://fonts.google.com/specimen/Open+Sans',
+                }
+                
+                download_link = font_download_links.get(requested_family, 'https://fonts.google.com/')
+                
+                warning_msg = (
+                    f"\n⚠️ Font '{requested_family}' is not installed on your system.\n"
+                    f"Using fallback font: '{resolved_family}'\n"
+                    f"\nTo install '{requested_family}':\n"
+                    f"  Download: {download_link}\n"
+                    f"  Or search Google Fonts: https://fonts.google.com/\n"
+                )
+                warnings.warn(warning_msg, UserWarning)
+                print(warning_msg)  # Also print to console for visibility
+        
         plt.rcParams['font.family'] = resolved_family
         plt.rcParams['font.size'] = config.font_size
         plt.rcParams['text.color'] = getattr(config, 'text_color', '#000000')
@@ -352,13 +388,21 @@ class ChartEngine:
         
         # Configure grid
         if axis_config.grid:
-            ax.grid(
-                True,
-                axis='y' if is_y_axis else 'x',
-                color=axis_config.grid_color,
-                alpha=axis_config.grid_alpha,
-                linestyle=axis_config.grid_style
-            )
+            grid_type = getattr(axis_config, 'grid_type', 'y_only')  # default to y_only for backward compatibility
+            
+            # Determine which axes should have grid based on grid_type
+            if grid_type == 'both':
+                # Show grid on both X and Y axes
+                ax.grid(True, color=axis_config.grid_color, alpha=axis_config.grid_alpha, linestyle=axis_config.grid_style)
+            elif grid_type == 'x_only':
+                # Show grid only on X axis (vertical grid lines)
+                ax.grid(True, axis='x', color=axis_config.grid_color, alpha=axis_config.grid_alpha, linestyle=axis_config.grid_style)
+            elif grid_type == 'y_only':
+                # Show grid only on Y axis (horizontal grid lines)
+                ax.grid(True, axis='y', color=axis_config.grid_color, alpha=axis_config.grid_alpha, linestyle=axis_config.grid_style)
+            elif grid_type == 'none':
+                # No grid
+                ax.grid(False)
 
         # Format ticks
         # Format ticks

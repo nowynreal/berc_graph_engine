@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QColor
 
-from assets.themes import get_theme_names
+from assets.comprehensive_styles import get_style_names
 
 
 class ColorButton(QPushButton):
@@ -164,15 +164,16 @@ class StylePanel(QWidget):
         general_layout = QVBoxLayout(general_tab)
         general_layout.setSpacing(8)
 
-        theme_group = QGroupBox("Theme")
-        theme_layout = QHBoxLayout()
-        theme_layout.addWidget(QLabel("Preset:"))
-        self.theme_combo = QComboBox()
-        self.theme_combo.addItems(get_theme_names())
-        self.theme_combo.currentTextChanged.connect(self.apply_theme)
-        theme_layout.addWidget(self.theme_combo, 1)
-        theme_group.setLayout(theme_layout)
-        general_layout.addWidget(theme_group)
+        # Professional Styles (unified system)
+        style_group = QGroupBox("Professional Style")
+        style_layout = QHBoxLayout()
+        style_layout.addWidget(QLabel("Style:"))
+        self.style_combo = QComboBox()
+        self.style_combo.addItems(get_style_names())
+        self.style_combo.currentTextChanged.connect(self.apply_comprehensive_style)
+        style_layout.addWidget(self.style_combo, 1)
+        style_group.setLayout(style_layout)
+        general_layout.addWidget(style_group)
 
         # Special presets (COVID, Recession, etc.)
         special_group = QGroupBox("Special Scenarios")
@@ -254,6 +255,21 @@ class StylePanel(QWidget):
         self.show_grid_check.setChecked(True)
         self.show_grid_check.stateChanged.connect(lambda: self.style_changed.emit())
         grid_settings_layout.addWidget(self.show_grid_check)
+        
+        # Grid type selector
+        grid_type_layout = QHBoxLayout()
+        grid_type_layout.addWidget(QLabel("Grid Type:"))
+        self.grid_type_combo = QComboBox()
+        self.grid_type_combo.addItems(['Both Axes', 'X Axis Only', 'Y Axis Only', 'No Grid'])
+        self.grid_type_combo.setItemData(0, 'both')
+        self.grid_type_combo.setItemData(1, 'x_only')
+        self.grid_type_combo.setItemData(2, 'y_only')
+        self.grid_type_combo.setItemData(3, 'none')
+        self.grid_type_combo.currentIndexChanged.connect(lambda: self.style_changed.emit())
+        grid_type_layout.addWidget(self.grid_type_combo, 1)
+        grid_type_layout.addStretch()
+        grid_settings_layout.addLayout(grid_type_layout)
+        
         grid_settings_group.setLayout(grid_settings_layout)
         general_layout.addWidget(grid_settings_group)
         general_layout.addStretch()
@@ -383,43 +399,58 @@ class StylePanel(QWidget):
             self.line_widgets[column] = widget
             self.lines_container_layout.addWidget(widget)
             
-    def apply_theme(self, theme_name: str):
-        """Apply a preset theme."""
-        from assets.themes import get_theme
+    def apply_comprehensive_style(self, style_name: str):
+        """Apply a comprehensive professional style."""
+        from assets.comprehensive_styles import get_style
         
         try:
-            theme = get_theme(theme_name)
+            style = get_style(style_name)
             
-            # Apply general colors
-            self.bg_color_button.update_color(theme['background'])
-            self.grid_color_button.update_color(theme['grid'])
+            # Apply colors
+            self.bg_color_button.update_color(style['background_color'])
+            self.grid_color_button.update_color(style['grid_color'])
             
             # Apply font settings
-            if 'font_family' in theme:
-                index = self.font_family_combo.findText(theme['font_family'])
+            if 'font_family' in style:
+                index = self.font_family_combo.findText(style['font_family'])
                 if index >= 0:
                     self.font_family_combo.setCurrentIndex(index)
             
-            if 'font_size' in theme:
-                self.font_size_spin.setValue(theme['font_size'])
+            if 'font_size' in style:
+                self.font_size_spin.setValue(style['font_size'])
             
-            if 'title_fontsize' in theme:
-                self.title_size_spin.setValue(theme['title_fontsize'])
+            if 'title_fontsize' in style:
+                self.title_size_spin.setValue(style['title_fontsize'])
             
-            # Apply title weight if provided
-            if 'title_fontweight' in theme:
-                # No direct control for weight in UI; emit change so engine uses theme's weight
-                # Title weight is taken from ChartConfig built in main_window
-                pass
+            # Apply grid settings
+            if 'show_grid' in style:
+                self.show_grid_check.setChecked(style.get('show_grid', True))
+            
+            if 'grid_type' in style:
+                index = self.grid_type_combo.findData(style['grid_type'])
+                if index >= 0:
+                    self.grid_type_combo.setCurrentIndex(index)
+            
+            # Apply legend settings
+            if 'legend_position' in style:
+                index = self.legend_position_combo.findText(style['legend_position'])
+                if index >= 0:
+                    self.legend_position_combo.setCurrentIndex(index)
+            
+            if 'legend_ncol' in style:
+                self.legend_ncol_spin.setValue(style['legend_ncol'])
+            
+            if 'legend_framealpha' in style:
+                self.legend_alpha_spin.setValue(style['legend_framealpha'])
             
             # Update line colors
             for i, (column, widget) in enumerate(self.line_widgets.items()):
-                color = theme['line_colors'][i % len(theme['line_colors'])]
+                color = style['line_colors'][i % len(style['line_colors'])]
                 widget.set_color(color)
             
             self.style_changed.emit()
-        except Exception:
-            pass  # Ignore theme errors
+        except Exception as e:
+            pass  # Ignore errors
     
     def get_special_preset_config(self) -> dict:
         """Get period highlights from selected special preset."""
@@ -445,6 +476,7 @@ class StylePanel(QWidget):
             'font_size': self.font_size_spin.value(),
             'title_fontsize': self.title_size_spin.value(),
             'show_grid': self.show_grid_check.isChecked(),
+            'grid_type': self.grid_type_combo.currentData(),
             'show_legend': self.show_legend_check.isChecked(),
             'legend_position': self.legend_position_combo.currentText(),
             'legend_title': self.legend_title_edit.text(),
